@@ -32,17 +32,17 @@ const PromptModal: React.FC<PromptModalProps> = ({ prompt, onClose }) => {
 
     return (
         <div
-            className={`fixed inset-0 bg-black z-50 flex justify-center items-center p-4 transition-opacity duration-300 ${isShowing ? 'bg-opacity-70 opacity-100' : 'bg-opacity-0 opacity-0 pointer-events-none'}`}
+            className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex justify-center items-center p-4 transition-opacity duration-300 ${isShowing ? 'bg-opacity-70 opacity-100' : 'bg-opacity-0 opacity-0 pointer-events-none'}`}
             onClick={onClose}
         >
             <div
-                className={`bg-zinc-800/95 backdrop-blur-sm rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 relative transition-all duration-300 ${isShowing ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
+                className={`bg-zinc-800/95 backdrop-blur-sm rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 md:p-8 relative transition-all duration-300 ${isShowing ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
                 onClick={e => e.stopPropagation()}
             >
                 <button onClick={onClose} className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
-                <h2 className="text-3xl font-bold text-white mb-2">{prompt.title}</h2>
+                <h2 className="text-3xl font-bold text-white mb-2 mt-6 md:mt-0">{prompt.title}</h2>
                 <p className="text-zinc-400 mb-6">{prompt.description}</p>
                 <div className="flex flex-wrap gap-2 mb-6">
                     <span className="text-sm font-semibold bg-zinc-700 text-white py-1 px-3 rounded-full">{prompt.category}</span>

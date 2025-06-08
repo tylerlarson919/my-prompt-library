@@ -50,6 +50,8 @@ export default function PromptClient({ initialPrompts }: { initialPrompts: Promp
     return (
         <>
             <div className="flex-grow w-full max-w-7xl mx-auto flex flex-col md:flex-row gap-x-8 gap-y-6 p-4 md:p-8 overflow-y-auto">
+                
+                {/* Categories Column */}
                 <aside className="w-full md:w-64 flex-shrink-0">
                     <h2 className="text-sm font-bold tracking-widest text-zinc-500 mb-3 px-2">CATEGORIES</h2>
                     <nav className="flex flex-col space-y-1">
@@ -59,35 +61,28 @@ export default function PromptClient({ initialPrompts }: { initialPrompts: Promp
                     </nav>
                 </aside>
 
-                <aside className="w-full md:w-64 flex-shrink-0">
+                {/* Tags Column - now visually fades without placeholder text */}
+                <aside className={`w-full md:w-64 flex-shrink-0 transition-opacity duration-300 ease-in-out ${selectedCategory ? 'opacity-100' : 'opacity-50 md:opacity-20 pointer-events-none'}`}>
                     <h2 className="text-sm font-bold tracking-widest text-zinc-500 mb-3 px-2">TAGS</h2>
-                    {selectedCategory ? (
-                        <div className="flex flex-col space-y-1">
-                            {tagsForSelectedCategory.map(tag => (
-                                <NavItem key={tag} text={tag} onClick={() => handleTagClick(tag)} isActive={selectedTag === tag} />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="px-2 py-10 text-center text-zinc-600 border-2 border-dashed border-zinc-800 rounded-lg h-full flex items-center justify-center">
-                            <p className="text-sm">Select a category to see its tags.</p>
-                        </div>
-                    )}
+                    <div className="flex flex-col space-y-1">
+                        {selectedCategory && tagsForSelectedCategory.map(tag => (
+                            <NavItem key={tag} text={tag} onClick={() => handleTagClick(tag)} isActive={selectedTag === tag} />
+                        ))}
+                    </div>
                 </aside>
                 
-                <div className="hidden md:flex flex-grow items-center justify-center text-center p-10 border-2 border-dashed border-zinc-800 rounded-lg">
-                    <div>
-                        <h3 className="text-xl font-semibold text-zinc-400">Prompt Panel</h3>
-                        <p className="text-zinc-500 mt-2">Selected prompts will appear in a panel at the bottom.</p>
-                    </div>
-                </div>
+                {/* This empty div just holds the space on desktop */}
+                <div className="flex-grow hidden md:block"></div>
+
             </div>
 
+            {/* Prompts Drawer */}
             <div className={`fixed bottom-0 left-0 right-0 bg-zinc-900/80 backdrop-blur-md z-30 overflow-y-auto transition-transform duration-500 ease-in-out shadow-[0_-5px_25px_-5px_rgba(0,0,0,0.3)] ${viewingPrompts ? 'translate-y-0 h-3/5 md:h-2/5' : 'translate-y-full h-3/5 md:h-2/5'}`}>
                 <div className="w-full max-w-7xl mx-auto p-4 md:p-6">
                     <button onClick={() => setSelectedTag(null)} className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
-                    <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
+                    <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 mt-6 md:mt-0">
                         Prompts for "{selectedTag}"
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -98,6 +93,7 @@ export default function PromptClient({ initialPrompts }: { initialPrompts: Promp
                 </div>
             </div>
             
+            {/* Prompt Modal */}
             <PromptModal prompt={selectedPrompt} onClose={() => setSelectedPrompt(null)} />
         </>
     );
