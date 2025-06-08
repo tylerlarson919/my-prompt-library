@@ -1,48 +1,23 @@
-// src/app/page.tsx
+// app/page.tsx
 
-import fs from 'fs';
-import path from 'path';
-import Papa from 'papaparse';
-import PromptCard, { Prompt } from './components/PromptCard';
+import { fetchPrompts } from './lib/data'; 
+import PromptClient from './components/PromptClient';
 
-async function getPrompts(): Promise<Prompt[]> {
-  const csvFilePath = path.join(process.cwd(), 'public', 'prompts.csv');
-  const csvFile = fs.readFileSync(csvFilePath, 'utf8');
-  return new Promise(resolve => {
-    Papa.parse(csvFile, {
-      header: true,
-      skipEmptyLines: true,
-      complete: (results) => {
-        resolve(results.data as Prompt[]);
-      }
-    });
-  });
-}
-
-export default async function Home() {
-  const prompts = await getPrompts();
-  const tradingPrompts = prompts.filter(p => p.category === 'Trading');
+export default async function HomePage() {
+  // 1. Fetch data on the server at build time
+  const initialPrompts = await fetchPrompts();
 
   return (
-    <main className="bg-gray-900 min-h-screen p-8">
-      <div className="container mx-auto">
-        <h1 className="text-5xl font-extrabold text-white text-center mb-2">
-          My Prompt Library
-        </h1>
-        <p className="text-center text-gray-400 mb-12">A collection of powerful prompts for various tasks.</p>
-
-        <div>
-          <h2 className="text-3xl font-bold text-cyan-400 mb-6 border-b-2 border-cyan-400 pb-2">
-            Trading
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {tradingPrompts.map((prompt, index) => (
-              <PromptCard key={index} prompt={prompt} />
-            ))}
-          </div>
-        </div>
-        {/* You can add more sections here for other categories in the future */}
-      </div>
+    <main className="bg-zinc-900 min-h-screen w-full text-white flex flex-col font-sans">
+      <header className="text-center py-6 md:py-8 border-b border-zinc-800/50">
+        <h1 className="text-4xl md:text-5xl font-extrabold mb-2 tracking-tight">Prompt Library</h1>
+        <p className="text-zinc-400 text-base md:text-lg px-4">
+          Select a category, then a tag to find prompts.
+        </p>
+      </header>
+      
+      {/* 2. Pass the data to the interactive Client Component */}
+      <PromptClient initialPrompts={initialPrompts} />
     </main>
   );
 }
