@@ -3,6 +3,8 @@
 import { fetchPrompts } from './lib/data'; 
 import PromptClient from './components/PromptClient';
 
+export const revalidate = 0;
+
 export default async function HomePage() {
   // 1. Fetch data on the server at build time
   const initialPrompts = await fetchPrompts();

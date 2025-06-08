@@ -9,29 +9,32 @@ import NavItem from './NavItem';
 import PromptCard from './PromptCard';
 
 export default function PromptClient({ initialPrompts }: { initialPrompts: Prompt[] }) {
-    const [prompts] = useState<Prompt[]>(initialPrompts);
+    // REMOVED: const [prompts] = useState<Prompt[]>(initialPrompts);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
     const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
 
     const viewingPrompts = !!selectedTag;
 
-    const categories = useMemo(() => [...new Set(prompts.map(p => p.category))].sort(), [prompts]);
+    // UPDATED: Use initialPrompts directly
+    const categories = useMemo(() => [...new Set(initialPrompts.map(p => p.category))].sort(), [initialPrompts]);
 
+    // UPDATED: Use initialPrompts directly
     const tagsForSelectedCategory = useMemo(() => {
         if (!selectedCategory) return [];
-        const categoryPrompts = prompts.filter(p => p.category === selectedCategory);
+        const categoryPrompts = initialPrompts.filter(p => p.category === selectedCategory);
         const allTags = categoryPrompts.flatMap(p => p.tags.split(',').map(t => t.trim()));
         return [...new Set(allTags)].sort();
-    }, [prompts, selectedCategory]);
+    }, [initialPrompts, selectedCategory]);
 
+    // UPDATED: Use initialPrompts directly
     const promptsForSelectedTag = useMemo(() => {
         if (!selectedTag || !selectedCategory) return [];
-        return prompts.filter(p =>
+        return initialPrompts.filter(p =>
             p.category === selectedCategory &&
             p.tags.split(',').map(t => t.trim()).includes(selectedTag)
         );
-    }, [prompts, selectedCategory, selectedTag]);
+    }, [initialPrompts, selectedCategory, selectedTag]);
 
     const handleCategoryClick = (category: string) => {
         if (selectedCategory === category) {

@@ -1,5 +1,3 @@
-// lib/data.ts
-
 import Papa from 'papaparse';
 import { Prompt } from './types';
 
@@ -7,9 +5,7 @@ const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQsLXN
 
 export const fetchPrompts = async (): Promise<Prompt[]> => {
     try {
-        // Use fetch to get data. This works on the server.
-        // Add revalidation to refetch data periodically without needing a new build.
-        const response = await fetch(GOOGLE_SHEET_URL, { next: { revalidate: 3600 } });
+        const response = await fetch(GOOGLE_SHEET_URL, { cache: 'no-store' });
 
         if (!response.ok) {
             throw new Error(`Failed to fetch CSV data: ${response.statusText}`);
@@ -25,12 +21,14 @@ export const fetchPrompts = async (): Promise<Prompt[]> => {
                     const data = results.data as any[];
                     const prompts: Prompt[] = data
                         .map(row => ({
-                            title: row.title || '',
-                            description: row.description || '',
-                            prompt: row.prompt || '',
-                            tags: row.tags || '',
-                            category: row.category || '',
+                            // UPDATED: Use capitalized headers to match the Google Sheet.
+                            title: row.Title || '',
+                            description: row.Description || '',
+                            prompt: row.Prompt || '',
+                            tags: row.Tags || '',
+                            category: row.Category || '',
                         }))
+                        // This filter removes any rows that don't have all required fields.
                         .filter(p => p.title && p.description && p.prompt && p.tags && p.category);
                     resolve(prompts);
                 },
